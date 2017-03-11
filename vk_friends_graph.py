@@ -31,7 +31,6 @@ def graph_builder(graph, id, depth=1, delay=float(0), inscription='', enrich_ins
         graph_builder(graph, friend_id, depth - 1, delay, iteration, False)
         iterator += 1
 
-
 HOST = 'https://api.vk.com/method/'
 VERSION = '5.62'
 
