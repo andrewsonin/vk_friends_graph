@@ -36,21 +36,32 @@ VERSION = '5.62'
 
 print('Please, input ID of some VK user:')
 my_id = int(input())
-print('Please, input a depth of search.\nATTENTION!!! If you choose a depth of search greater than 1, be ready to face '
-      'a lack of RAM.')
+
+print('\nPlease, input a depth of search.\nATTENTION!!! If you choose a depth of search greater than 1, be ready '
+      'to face a lack of RAM.')
 my_depth = int(input())
 if my_depth < 1:
     my_depth = 1
     print('Invalid value. The depth was changed to 1.')
-print('Please, input a time delay in seconds.\nIf you have a very fast computer, please, input nonzero delay. Otherwise'
-      ' antiDoS system may reject you.')
+
+print('\nPlease, input a time delay in seconds.\nIf you have a very fast computer, please, input nonzero delay. '
+      'Otherwise antiDoS system may reject you.')
 my_delay = float(input())
+
+drawing_ways = ['circular', 'spring', 'spectral', 'random', 'shell']
+string = [str(i) + ' - ' + str(drawing_ways[i]) for i in range(len(drawing_ways))]
+print('\nChoose one of the drawing algorithms:')
+print(*string, sep=', ')
+drawing_way = int(input())
+if not drawing_way in range(len(drawing_ways)):
+    drawing_way = 0
+    print('Invalid value. The algorithm was changed to 0.')
 
 my_graph = nx.Graph()
 graph_builder(my_graph, my_id, my_depth, my_delay)
 
-print('Calculating space configuration of vertexes…')
-positions = nx.circular_layout(my_graph)
+print('\nCalculating space configuration of vertexes…')
+positions = eval('nx.' + drawing_ways[drawing_way] + '_layout(my_graph)')
 edges = [element for element in my_graph.edges(data=True)]
 
 print('Full number of accounts involved:', len(my_graph.nodes()))
@@ -61,4 +72,5 @@ nx.draw_networkx_edges(my_graph, positions, edgelist=edges, width=1)
 
 plt.axis('off')
 plt.savefig('friends_graph.png')
+print('The image was saved as friends_graph.png')
 plt.show()
