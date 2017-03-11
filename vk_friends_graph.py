@@ -44,9 +44,12 @@ if my_depth < 1:
     my_depth = 1
     print('Invalid value. The depth was changed to 1.')
 
-print('\nPlease, input a time delay in seconds.\nIf you have a very fast computer, please, input nonzero delay. '
-      'Otherwise antiDoS system may reject you.')
+print('\nPlease, input a time delay in seconds in range from 0 to 10.\nIf you have a very fast computer, please, input '
+      'nonzero delay. Otherwise antiDoS system may reject you.')
 my_delay = float(input())
+if not 0 <= my_delay <= 10:
+    my_delay = 0.3
+    print('Invalid value. Time delay was changed to 0.3 second.')
 
 drawing_ways = ['circular', 'spring', 'spectral', 'random', 'shell']
 string = [str(i) + ' - ' + str(drawing_ways[i]) for i in range(len(drawing_ways))]
