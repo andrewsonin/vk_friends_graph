@@ -78,13 +78,12 @@ graph_builder(my_graph, my_id, my_depth, my_delay, friends_only)
 
 print('\nCalculating space configuration of vertexes…')
 positions = eval(drawing_ways[drawing_way] + '_layout(my_graph)')
-edges = [element for element in my_graph.edges(data=True)]
 
 print('Full number of accounts involved:', len(my_graph.nodes()))
 print('Drawing a graph…')
 draw_networkx_nodes(my_graph, positions, node_shape='s', node_size=500, node_color='y')
 draw_networkx_labels(my_graph, positions, font_size=4, font_family='sans-serif', font_color='r')
-draw_networkx_edges(my_graph, positions, edgelist=edges, width=1)
+draw_networkx_edges(my_graph, positions, edgelist=my_graph.edges(), width=1)
 
 axis('off')
 fig_name, dir_files = '', set(listdir('.'))
