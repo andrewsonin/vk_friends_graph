@@ -35,7 +35,7 @@ def graph_builder(graph, account_id, depth=1, delay=float(0), fr_only=False, ins
     if enrich_inscription:
         inscription = str(len(graph.nodes()) - 1)
     iterator = 1
-    for friend_id in graph.nodes()[1:]:
+    for friend_id in list(graph.nodes())[1:]:
         iteration = str(iterator) + '/' + inscription
         print('Iteration:', iteration)
         graph_builder(graph, friend_id, depth - 1, delay, fr_only, iteration, False)
