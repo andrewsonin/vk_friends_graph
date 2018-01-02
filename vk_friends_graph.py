@@ -1,9 +1,9 @@
 from requests import get
 from matplotlib.pyplot import axis, savefig, show
 from networkx import Graph, draw_networkx_nodes, draw_networkx_labels, draw_networkx_edges, circular_layout, \
-    spring_layout, spectral_layout, random_layout, shell_layout
+    spring_layout, spectral_layout, random_layout, shell_layout, write_edgelist
 from time import sleep
-from os import listdir
+from os import listdir, mkdir
 from random import randint
 from argparse import ArgumentParser
 
@@ -89,13 +89,22 @@ def main():
     draw_networkx_labels(my_graph, positions, font_size=1, font_family='sans-serif', font_color='r')
     draw_networkx_edges(my_graph, positions, edgelist=my_graph.edges(), width=0.1)
 
-    axis('off')
-    fig_name, dir_files = '', set(listdir('.'))
+    try:
+        mkdir('images')
+    except OSError:
+        pass
+
+    fig_name, dir_files = '', set(listdir('images'))
     while not fig_name:
-        variant = str(randint(1000000, 9999999)) + '.pdf'
+        variant = str(randint(1000000, 9999999))
         if variant not in dir_files:
-            fig_name = 'id' + str(args.user_id[0]) + '_img' + variant
-    savefig(fig_name, format='pdf')
+            fig_name = 'id' + str(args.user_id[0]) + '_dep' + str(args.dep) + '_mod' + str(args.mod) + '_img' + variant
+    axis('off')
+    savefig('images/' + fig_name + '.pdf', format='pdf')
+
+    with open('images/' + fig_name + '.data', 'wb') as out:
+        write_edgelist(my_graph, out, encoding='ascii', data=False)
+
     print('The image was saved as', fig_name)
     show()
 
