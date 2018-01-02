@@ -96,8 +96,11 @@ def main():
 
     fig_name, dir_files = '', set(listdir('images'))
     while not fig_name:
-        variant = str(randint(1000000, 9999999))
-        if variant not in dir_files:
+        variant = '_img' + str(randint(1000000, 9999999))
+        for file_name in dir_files:
+            if variant in file_name:
+                break
+        else:
             fig_name = 'id' + str(args.user_id[0]) + '_dep' + str(args.dep) + '_mod' + str(args.mod) + '_img' + variant
     axis('off')
     savefig('images/' + fig_name + '.pdf', format='pdf')
