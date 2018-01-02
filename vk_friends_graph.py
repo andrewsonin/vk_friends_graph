@@ -56,7 +56,7 @@ def main():
     draw_networkx_labels(my_graph, positions, font_size=1, font_family='sans-serif', font_color='r')
     draw_networkx_edges(my_graph, positions, edgelist=my_graph.edges(), width=0.1)
 
-    path = module_path() + '/images'
+    path = module_path() + '/images/'
 
     try:
         mkdir(path)
@@ -72,9 +72,9 @@ def main():
         else:
             fig_name = 'id' + str(args.user_id[0]) + '_dep' + str(args.dep) + '_mod' + str(args.mod) + '_img' + variant
     axis('off')
-    savefig(path + '/' + fig_name + '.pdf', format='pdf')
+    savefig(path + fig_name + '.pdf', format='pdf')
 
-    with open(path + '/' + fig_name + '.data', 'wb') as out:
+    with open(path + fig_name + '.data', 'wb') as out:
         write_edgelist(my_graph, out, encoding='ascii', data=False)
 
     print('The image was saved as', fig_name)
