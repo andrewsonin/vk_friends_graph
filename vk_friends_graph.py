@@ -1,43 +1,10 @@
-from requests import get
 from matplotlib.pyplot import axis, savefig, show
 from networkx import Graph, draw_networkx_nodes, draw_networkx_labels, draw_networkx_edges, circular_layout, \
     spring_layout, spectral_layout, random_layout, shell_layout, write_edgelist
-from time import sleep
 from os import listdir, mkdir
 from random import randint
 from argparse import ArgumentParser
-
-HOST = 'https://api.vk.com/method/'
-VERSION = '5.69'
-
-
-def get_friends_dict(user_id=1):
-    return get(HOST + 'friends.get', params={'user_id': user_id, 'fields': 'first_name', 'v': VERSION}).json()
-
-
-def add_account_to_graph(graph, account_id, fr_only=False):
-    friends = get_friends_dict(account_id).get('response', {}).get('items', [])
-    if fr_only:
-        for friend in friends:
-            if friend['id'] in graph.nodes():
-                graph.add_edge(account_id, friend['id'])
-    else:
-        for friend in friends:
-            graph.add_edge(account_id, friend['id'])
-
-
-def graph_builder(graph, account_id, depth=1, delay=0.0, fr_only=False, inscription='', enrich_inscription=True):
-    sleep(delay)
-    if depth != 1:
-        add_account_to_graph(graph, account_id)
-        if enrich_inscription:
-            inscription = str(len(graph.nodes()) - 1)
-        for iter_num, friend_id in enumerate(list(graph.nodes())[1:], 1):
-            iteration = str(iter_num) + '/' + inscription
-            print('Iteration:', iteration)
-            graph_builder(graph, friend_id, depth - 1, delay, fr_only, iteration, False)
-    else:
-        add_account_to_graph(graph, account_id, fr_only)
+from functions import *
 
 
 def main():
@@ -89,12 +56,14 @@ def main():
     draw_networkx_labels(my_graph, positions, font_size=1, font_family='sans-serif', font_color='r')
     draw_networkx_edges(my_graph, positions, edgelist=my_graph.edges(), width=0.1)
 
+    path = module_path() + '/images'
+
     try:
-        mkdir('images')
+        mkdir(path)
     except OSError:
         pass
 
-    fig_name, dir_files = '', set(listdir('images'))
+    fig_name, dir_files = '', set(listdir(path))
     while not fig_name:
         variant = '_img' + str(randint(1000000, 9999999))
         for file_name in dir_files:
@@ -103,9 +72,9 @@ def main():
         else:
             fig_name = 'id' + str(args.user_id[0]) + '_dep' + str(args.dep) + '_mod' + str(args.mod) + '_img' + variant
     axis('off')
-    savefig('images/' + fig_name + '.pdf', format='pdf')
+    savefig(path + '/' + fig_name + '.pdf', format='pdf')
 
-    with open('images/' + fig_name + '.data', 'wb') as out:
+    with open(path + '/' + fig_name + '.data', 'wb') as out:
         write_edgelist(my_graph, out, encoding='ascii', data=False)
 
     print('The image was saved as', fig_name)
