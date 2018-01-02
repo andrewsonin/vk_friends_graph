@@ -26,7 +26,7 @@ def add_account_to_graph(graph, account_id, fr_only=False):
             graph.add_edge(account_id, friend['id'])
 
 
-def graph_builder(graph, account_id, depth=1, delay=float(0), fr_only=False, inscription='', enrich_inscription=True):
+def graph_builder(graph, account_id, depth=1, delay=0.0, fr_only=False, inscription='', enrich_inscription=True):
     sleep(delay)
     if depth != 1:
         add_account_to_graph(graph, account_id)
