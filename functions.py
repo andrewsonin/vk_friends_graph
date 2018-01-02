@@ -39,9 +39,13 @@ def graph_builder(graph, account_id, depth=1, delay=0.0, fr_only=False, inscript
 
 
 def edge_intersection(graph1, graph2):
+    graphs = [graph1, graph2]
+    graphs.sort(key=lambda graph: graph.number_of_edges())
     graph = Graph()
-    graph.add_edges_from([edge for edge in min(graph1, graph2, key=lambda graph: graph.number_of_edges()).edges
-                          if edge in max(graph1, graph2, key=lambda graph: graph.number_of_edges()).edges])
+    set_of_edges = set(graphs[1].edges)
+    for edge in graphs[0].edges:
+        if edge in set_of_edges or edge[::-1] in set_of_edges:
+            graph.add_edge(edge[0], edge[1])
     return graph
 
 

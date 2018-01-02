@@ -83,7 +83,7 @@ def main():
                 break
         else:
             fig_name = 'id' + str(args.user_id[0]) + ('intersect' + str(args.id2) if args.int else '') \
-                       + '_dep' + str(args.dep) + '_mod' + str(args.mod) + '_img' + variant
+                       + '_dep' + str(args.dep) + '_mod' + str(args.mod) + variant
     axis('off')
     savefig(path + fig_name + '.pdf', format='pdf')
 
