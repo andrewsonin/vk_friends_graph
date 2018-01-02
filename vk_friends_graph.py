@@ -41,7 +41,7 @@ def main():
 
     if args.int:
         if args.id2 is None:
-            print('id2 field was not defined. Use -h to help.')
+            print('Error: ID2 field was not defined, while INT was declared. Use -h to help.')
             raise AssertionError
         my_graph = edge_intersection(graph_builder(Graph(), args.user_id[0], args.dep, args.slp, mod),
                                      graph_builder(Graph(), args.id2, args.dep, args.slp, mod))
