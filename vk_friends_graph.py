@@ -1,6 +1,6 @@
 from matplotlib.pyplot import axis, savefig, show
-from networkx import Graph, draw_networkx_nodes, draw_networkx_labels, draw_networkx_edges, circular_layout, \
-    spring_layout, spectral_layout, random_layout, shell_layout, write_edgelist
+from networkx import draw_networkx_nodes, draw_networkx_labels, draw_networkx_edges, circular_layout, spring_layout, \
+    spectral_layout, random_layout, shell_layout, write_edgelist
 from os import listdir, mkdir
 from random import randint
 from argparse import ArgumentParser
@@ -26,15 +26,27 @@ def main():
     parser.add_argument('-a', '--alg', type=int, action='store', nargs='?', default=1,
                         help='Drawing algorithms: 0 - circular, 1 - spring, 2 - spectral, 3 - random, 4 - shell. Other '
                              'and default is spring.')
+    parser.add_argument('-i', '--int', action='store_true',
+                        help='If true, program calculates edge intersection between graphs of the first and the second '
+                             'persons.')
+    parser.add_argument('-n', '--id2', type=int, action='store', nargs='?',
+                        help='VK Id of the second person of interest.')
     parser.add_argument('-m', '--mod', type=int, action='store', nargs='?', default=1,
                         help='Operating mode: 1 - At the last step of the recursion program adds edges to the graph '
                              'only between already included vertexes; any other - At the last step of the recursion '
                              'program adds all incoming edges to the graph.')
 
     args = parser.parse_args()
+    mod = True if args.mod == 1 else False
 
-    my_graph = Graph()
-    graph_builder(my_graph, args.user_id[0], args.dep, args.slp, True if args.mod == 1 else False)
+    if args.int:
+        if args.id2 is None:
+            print('id2 field was not defined. Use -h to help.')
+            raise AssertionError
+        my_graph = edge_intersection(graph_builder(Graph(), args.user_id[0], args.dep, args.slp, mod),
+                                     graph_builder(Graph(), args.id2, args.dep, args.slp, mod))
+    else:
+        my_graph = graph_builder(Graph(), args.user_id[0], args.dep, args.slp, mod)
 
     print('\nPlease, wait. Calculating space configuration of vertexes…')
     if args.alg == 1:
@@ -70,7 +82,8 @@ def main():
             if variant in file_name:
                 break
         else:
-            fig_name = 'id' + str(args.user_id[0]) + '_dep' + str(args.dep) + '_mod' + str(args.mod) + '_img' + variant
+            fig_name = 'id' + str(args.user_id[0]) + ('intersect' + str(args.id2) if args.int else '') \
+                       + '_dep' + str(args.dep) + '_mod' + str(args.mod) + '_img' + variant
     axis('off')
     savefig(path + fig_name + '.pdf', format='pdf')
 
